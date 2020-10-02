@@ -1,10 +1,10 @@
 package com.ngsc.takeover.controller;
 
+import com.ngsc.takeover.dto.AuthenticationResponse;
 import com.ngsc.takeover.dto.LoginRequest;
 import com.ngsc.takeover.dto.RegisterRequest;
 import com.ngsc.takeover.service.AuthService;
 import lombok.AllArgsConstructor;
-import lombok.extern.slf4j.Slf4j;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
@@ -28,7 +28,7 @@ public class AuthController {
     }
 
     @PostMapping("/login")
-    public void login(@RequestBody LoginRequest loginRequest) {
-        authService.login(loginRequest);
+    public AuthenticationResponse login(@RequestBody LoginRequest loginRequest) {
+        return authService.login(loginRequest);
     }
 }

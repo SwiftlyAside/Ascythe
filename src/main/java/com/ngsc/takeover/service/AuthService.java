@@ -1,5 +1,6 @@
 package com.ngsc.takeover.service;
 
+import com.ngsc.takeover.dto.AuthenticationResponse;
 import com.ngsc.takeover.dto.LoginRequest;
 import com.ngsc.takeover.dto.RegisterRequest;
 import com.ngsc.takeover.exceptions.TakeoverException;
@@ -8,9 +9,12 @@ import com.ngsc.takeover.model.User;
 import com.ngsc.takeover.model.VerificationToken;
 import com.ngsc.takeover.repository.UserRepository;
 import com.ngsc.takeover.repository.VerificationTokenRepository;
+import com.ngsc.takeover.security.JwtProvider;
 import lombok.AllArgsConstructor;
 import org.springframework.security.authentication.AuthenticationManager;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
+import org.springframework.security.core.Authentication;
+import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
@@ -27,6 +31,7 @@ public class AuthService {
     private final VerificationTokenRepository verificationTokenRepository;
     private final MailService mailService;
     private final AuthenticationManager authenticationManager;
+    private final JwtProvider jwtProvider;
 
     @Transactional
     public void signup(RegisterRequest registerRequest) {
@@ -71,9 +76,11 @@ public class AuthService {
         userRepository.save(user);
     }
 
-    public void login(LoginRequest loginRequest) {
-        authenticationManager.authenticate(new UsernamePasswordAuthenticationToken(
+    public AuthenticationResponse login(LoginRequest loginRequest) {
+        Authentication authenticate = authenticationManager.authenticate(new UsernamePasswordAuthenticationToken(
                 loginRequest.getUsername(), loginRequest.getPassword()));
-
+        SecurityContextHolder.getContext().setAuthentication(authenticate);
+        String token = jwtProvider.generateToken(authenticate);
+        return new AuthenticationResponse(token, loginRequest.getUsername());
     }
 }

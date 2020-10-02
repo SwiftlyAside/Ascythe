@@ -1,8 +1,10 @@
 package com.ngsc.takeover.controller;
 
+import com.ngsc.takeover.dto.LoginRequest;
 import com.ngsc.takeover.dto.RegisterRequest;
 import com.ngsc.takeover.service.AuthService;
 import lombok.AllArgsConstructor;
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
@@ -22,6 +24,11 @@ public class AuthController {
     @GetMapping("accountVerification/{token}")
     public ResponseEntity<String> verifyAccount(@PathVariable String token) {
         authService.verifyAccount(token);
-        return null;
+        return new ResponseEntity<>("계정이 성공적으로 활성화되었어요.", HttpStatus.OK);
+    }
+
+    @PostMapping("/login")
+    public void login(@RequestBody LoginRequest loginRequest) {
+        authService.login(loginRequest);
     }
 }

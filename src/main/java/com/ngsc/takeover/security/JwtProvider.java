@@ -1,7 +1,6 @@
 package com.ngsc.takeover.security;
 
 import com.ngsc.takeover.exceptions.TakeoverException;
-import com.ngsc.takeover.model.User;
 import io.jsonwebtoken.Jwts;
 import org.springframework.security.core.Authentication;
 import org.springframework.stereotype.Service;

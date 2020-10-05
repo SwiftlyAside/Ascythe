@@ -1,6 +1,7 @@
 package com.ngsc.takeover.security;
 
 import com.ngsc.takeover.exceptions.TakeoverException;
+import io.jsonwebtoken.Claims;
 import io.jsonwebtoken.Jwts;
 import org.springframework.security.core.Authentication;
 import org.springframework.stereotype.Service;
@@ -10,6 +11,8 @@ import java.io.IOException;
 import java.io.InputStream;
 import java.security.*;
 import java.security.cert.CertificateException;
+
+import static io.jsonwebtoken.Jwts.parserBuilder;
 
 @Service
 public class JwtProvider {
@@ -40,5 +43,28 @@ public class JwtProvider {
         } catch (KeyStoreException | UnrecoverableKeyException | NoSuchAlgorithmException e) {
             throw new TakeoverException("공개키 요청중 오류 발생");
         }
+    }
+
+    public boolean validateToken(String jwt) {
+        parserBuilder().setSigningKey(getPublicKey()).build().parseClaimsJws(jwt);
+        return true;
+    }
+
+    private PublicKey getPublicKey() {
+        try {
+            return keyStore.getCertificate("ngsc_to").getPublicKey();
+        } catch (KeyStoreException e) {
+            throw new TakeoverException("공개키 요청중 오류 발생");
+        }
+    }
+
+    public String getUsernameFromJwt(String token) {
+        Claims claims = parserBuilder()
+                .setSigningKey(getPublicKey())
+                .build()
+                .parseClaimsJws(token)
+                .getBody();
+
+        return claims.getSubject();
     }
 }

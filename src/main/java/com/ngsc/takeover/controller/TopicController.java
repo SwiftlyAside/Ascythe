@@ -30,4 +30,11 @@ public class TopicController {
                 .status(HttpStatus.OK)
                 .body(topicService.getAll());
     }
+
+    @GetMapping("/{id}")
+    public ResponseEntity<TopicDto> getTopic(@PathVariable Long id) {
+        return ResponseEntity
+                .status(HttpStatus.OK)
+                .body(topicService.getTopic(id));
+    }
 }

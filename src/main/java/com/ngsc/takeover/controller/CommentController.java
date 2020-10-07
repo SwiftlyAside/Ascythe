@@ -21,14 +21,15 @@ public class CommentController {
         return new ResponseEntity<>(HttpStatus.CREATED);
     }
 
-    @GetMapping
+    @GetMapping("/by-post/{postId}")
     public ResponseEntity<List<CommentsDto>> getAllCommentsForPost(@PathVariable Long postId) {
         return ResponseEntity.status(HttpStatus.OK)
                 .body(commentService.getAllCommentsForPost(postId));
     }
 
-    @GetMapping
-    public void getAllCommentsForUser(String username) {
-
+    @GetMapping("/by-user/{userName}")
+    public ResponseEntity<List<CommentsDto>> getAllCommentsForUser(@PathVariable String userName) {
+        return ResponseEntity.status(HttpStatus.OK)
+                .body(commentService.getAllCommentsForUser(userName));
     }
 }

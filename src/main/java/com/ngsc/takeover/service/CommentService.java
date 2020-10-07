@@ -11,6 +11,7 @@ import com.ngsc.takeover.repository.CommentRepository;
 import com.ngsc.takeover.repository.PostRepository;
 import com.ngsc.takeover.repository.UserRepository;
 import lombok.AllArgsConstructor;
+import org.springframework.security.core.userdetails.UsernameNotFoundException;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
@@ -34,12 +35,12 @@ public class CommentService {
         Comment comment = commentMapper.map(commentsDto, post, authService.getCurrentUser());
         commentRepository.save(comment);
 
-        String message = mailContentBuilder.build(post.getUser().getUsername() + "님이 포스트에 코멘트를 달았어요. " + POST_URL);
+        String message = mailContentBuilder.build(authService.getCurrentUser().getUsername() + "님이 포스트에 코멘트를 달았어요. " + POST_URL);
         sendCommentNotification(message, post.getUser());
     }
 
     private void sendCommentNotification(String message, User user) {
-        mailService.sendMail(new NotificationEmail(user.getUsername() + "님이 코멘트를 달았어요.", user.getEmail(), message));
+        mailService.sendMail(new NotificationEmail(user.getUsername() + ", 누군가 코멘트를 달았어요.", user.getEmail(), message));
     }
 
     public List<CommentsDto> getAllCommentsForPost(Long postId) {
@@ -48,5 +49,14 @@ public class CommentService {
                 .stream()
                 .map(commentMapper::mapToDto)
                 .collect(Collectors.toList());
+    }
+
+    public List<CommentsDto> getAllCommentsForUser(String userName) {
+        User user = userRepository.findByUsername(userName)
+                .orElseThrow(() -> new UsernameNotFoundException(userName));
+        return commentRepository.findAllByUser(user)
+                .stream()
+                .map(commentMapper::mapToDto)
+            .collect(Collectors.toList());
     }
 }

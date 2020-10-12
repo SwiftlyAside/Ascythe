@@ -10,10 +10,8 @@ import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
 
-import static org.springframework.http.ResponseEntity.status;
-
 @RestController
-@RequestMapping("/api/posts")
+@RequestMapping("/api/posts/")
 @AllArgsConstructor
 public class PostController {
     private final PostService postService;
@@ -26,21 +24,21 @@ public class PostController {
 
     @GetMapping
     public ResponseEntity<List<PostResponse>> getAllPosts() {
-        return status(HttpStatus.OK).body(postService.getAllPosts());
+        return ResponseEntity.status(HttpStatus.OK).body(postService.getAllPosts());
     }
 
     @GetMapping("/{id}")
     public ResponseEntity<PostResponse> getPost(@PathVariable Long id) {
-        return status(HttpStatus.OK).body(postService.getPost(id));
+        return ResponseEntity.status(HttpStatus.OK).body(postService.getPost(id));
     }
 
-    @GetMapping("/by-topic/{id}")
+    @GetMapping("by-topic/{id}")
     public ResponseEntity<List<PostResponse>> getPostsByTopic(Long id) {
-        return status(HttpStatus.OK).body(postService.getPostsByTopic(id));
+        return ResponseEntity.status(HttpStatus.OK).body(postService.getPostsByTopic(id));
     }
 
-    @GetMapping("/by-user/{name}")
+    @GetMapping("by-user/{name}")
     public ResponseEntity<List<PostResponse>> getPostsByUsername(String username) {
-        return status(HttpStatus.OK).body(postService.getPostsByUsername(username));
+        return ResponseEntity.status(HttpStatus.OK).body(postService.getPostsByUsername(username));
     }
 }

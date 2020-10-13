@@ -9,10 +9,10 @@
         <relativePath/> <!-- lookup parent from repository -->
     </parent>
     <groupId>com.ngsc</groupId>
-    <artifactId>takeover</artifactId>
-    <version>0.0.1-SNAPSHOT</version>
-    <name>takeover</name>
-    <description>Demo project for Spring Boot</description>
+    <artifactId>ascythe</artifactId>
+    <version>0.0.2</version>
+    <name>ascythe</name>
+    <description>Ascythe</description>
 
     <properties>
         <java.version>1.8</java.version>
